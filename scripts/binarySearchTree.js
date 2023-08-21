@@ -1,24 +1,31 @@
 import Node from './node.js';
+import mergeSort from './mergeSort.js';
+import removeDuplicate from './removeDuplicate.js';
 
 export default class Tree {
   constructor() {
     this.root = null;
   }
 
-  buildTree(array) {
-    const middleIndex = Math.floor(array.length / 2);
-    const middleNode = new Node(array[middleIndex]);
-    const leftArray = array.slice(0, middleIndex);
-    const rightArray = array.slice(middleIndex + 1);
+  buildTree(inputArray) {
+    const processedArray = mergeSort(removeDuplicate(inputArray));
+    const build = (array) => {
+      const middleIndex = Math.floor(array.length / 2);
+      const middleNode = new Node(array[middleIndex]);
+      const leftArray = array.slice(0, middleIndex);
+      const rightArray = array.slice(middleIndex + 1);
 
-    if (leftArray.length !== 0) {
-      middleNode.left = this.buildTree(leftArray);
-    }
-    if (rightArray.length !== 0) {
-      middleNode.right = this.buildTree(rightArray);
-    }
+      if (leftArray.length !== 0) {
+        middleNode.left = build(leftArray);
+      }
+      if (rightArray.length !== 0) {
+        middleNode.right = build(rightArray);
+      }
 
-    return middleNode;
+      return middleNode;
+    };
+    this.root = build(processedArray);
+    return this.root;
   }
 
   insert(data) {
